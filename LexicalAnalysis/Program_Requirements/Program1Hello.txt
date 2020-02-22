@@ -1,0 +1,20 @@
+(  1,   1)	PPDIR	#include<stdio.h>
+(  2,   1)	KEYWD	int
+(  2,   5)	IDENT	main
+(  2,  10)	KEYWD	void
+(  2,  16)	IDENT	printf
+(  2,  23)	STRNG	"Hello World!\n"
+(  2,  41)	KEYWD	return
+(  2,  48)	INTGR	0
+(  3,   0)	EOF	
+
+
+Processed    3 lines
+             1 PPDIRs
+             2 IDENTs
+             3 KEYWDs
+             1 INTGRs
+             0 FLOATs
+             1 STRNGs
+             0 CHARs
+             0 CMMNTs
