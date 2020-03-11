@@ -20,7 +20,7 @@
 ( 17,  42)	INTGR	0
 ( 18,   5)	KEYWD	char
 ( 18,  10)	IDENT	L26
-( 18,  16)	CHAR	'Z'
+( 18,  16)	CHAR 	'Z'
 ( 18,  21)	IDENT	X3_86Z
 ( 18,  29)	IDENT	Array_of_25_Char
 ( 18,  46)	INTGR	25
@@ -40,31 +40,31 @@
 ( 22,  45)	IDENT	printf
 ( 22,  52)	STRNG	"\t Spring 2020\n"
 ( 24,   5)	IDENT	tabch
-( 24,  15)	CHAR	'\t'
+( 24,  15)	CHAR 	'\t'
 ( 24,  94)	IDENT	tabch
-( 24, 102)	CHAR	'\''
+( 24, 102)	CHAR 	'\''
 ( 25,   5)	IDENT	tabch
-( 25,  11)	CHAR	'	'
+( 25,  11)	CHAR 	'	'
 ( 25,  17)	IDENT	printf
 ( 25,  24)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 17\n"
 ( 26,   5)	IDENT	tabch
-( 26,  12)	CHAR	'	'
+( 26,  12)	CHAR 	'	'
 ( 26,  21)	IDENT	printf
 ( 26,  28)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 21\n"
 ( 27,   5)	IDENT	tabch
-( 27,  13)	CHAR	'	'
+( 27,  13)	CHAR 	'	'
 ( 27,  21)	IDENT	printf
 ( 27,  28)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 21\n"
 ( 28,   5)	IDENT	tabch
-( 28,  14)	CHAR	'	'
+( 28,  14)	CHAR 	'	'
 ( 28,  21)	IDENT	printf
 ( 28,  28)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 21\n"
 ( 29,   5)	IDENT	tabch
-( 29,  15)	CHAR	'	'
+( 29,  15)	CHAR 	'	'
 ( 29,  21)	IDENT	printf
 ( 29,  28)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 21\n"
 ( 30,   5)	IDENT	tabch
-( 30,  16)	CHAR	'	'
+( 30,  16)	CHAR 	'	'
 ( 30,  25)	IDENT	printf
 ( 30,  32)	STRNG	"preceding char literal contains single tab code 0x09, printf starts in col 25\n"
 ( 32,   5)	IDENT	strcpy
@@ -117,14 +117,13 @@
 ( 52,  13)	IDENT	L26
 ( 52,  21)	IDENT	nbr_out_123
 ( 53,   5)	IDENT	L26
-( 53,  11)	CHAR	'\0'
+( 53,  11)	CHAR 	'\0'
 ( 54,   5)	IDENT	printf
 ( 54,  12)	STRNG	"\nPress ENTER key to continue	..."
 ( 54,  53)	IDENT	getchar
 ( 56,   5)	KEYWD	return
 ( 56,  12)	INTGR	0
 ( 57,   5)	CMMNT	/* End of "Sample" source code for program #1 */
-( 59,   0)	EOF	
 
 
 Processed   59 lines

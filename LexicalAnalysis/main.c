@@ -494,6 +494,7 @@ Lexeme * lexScanner(FILE* cFilePtr) {
 			processingLexeme = TRUE;
 			lexemeDataPtr->filePosition[0] = filePosition[0];
 			lexemeDataPtr->filePosition[1] = filePosition[1];
+			lexemeDataPtr->lexemeString[numbCharsWritten] = NULL_SYM;
 			lexemeDataPtr->lexToken = END_OF_FILE;
 			lexemeDataPtr->tokenCompleted = TRUE;
 		}
@@ -648,16 +649,22 @@ Boolean isDigit(const CharToken aCharToken) {
 void printAndWrite(FILE* txtFilePtr, Lexeme* lexemeDataPtr, unsigned int * tokensProcessed) {
 	char* tokenStringName = tokenIdentifierToString(lexemeDataPtr->lexToken);
 
-	/* Only assign first 7 TokenTypes */
+	/* Only assign first 8 TokenTypes */
 	if (lexemeDataPtr->lexToken <= 7) {
 		if (lexemeDataPtr->tokenCompleted) {
 			tokensProcessed[lexemeDataPtr->lexToken] += 1;
 		}
 	}
 
-	printf("(%3i, %3i)\t%s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
-	//Write to file
-	fprintf(txtFilePtr, "(%3i, %3i)\t%s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
+	/* End of file doesnt follow the format??? (###, ###) [TAB] token [TAB] lexeme */
+	if (lexemeDataPtr->lexToken == END_OF_FILE) {
+		printf("(%3i, %3i)\t%-4s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName);
+	}else {
+		/* Space the token by the max token char length. */
+		printf("(%3i, %3i)\t%-5s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
+		//Write to file
+		fprintf(txtFilePtr, "(%3i, %3i)\t%-5s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
+	}
 }
 
 void printProcessedTokenData(FILE* txtFilePtr, const unsigned int* tokensProcessed, const unsigned int* linesProcessed) {
