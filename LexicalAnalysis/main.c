@@ -197,7 +197,7 @@ int main(int argc, char *argv[]) {
 
 	/* File Error Checking and Handling */
 	if (argc != 3) {
-		printf("Please check your arguments. Expecting format: lexscan <.c input file> <.txt output file>\n");
+		printf("Please check your arguments. Expecting format: LexicalAnalysis <.c input file> <.txt output file>\n");
 		return 1;
 	}
 	
@@ -205,12 +205,12 @@ int main(int argc, char *argv[]) {
 	txtFilePtr = fopen(argv[2], "w");
 
 	if(!cFilePtr) {
-		perror("Input File Error: ");
+		perror("Input File Error");
 		printf("Filename: %s\n", argv[1]);
 		return 1;
 	}
 	else if (!txtFilePtr) {
-		perror("Output File Error: ");
+		perror("Output File Error");
 		printf("Filename: %s\n", argv[2]);
 		return 1;
 	}
