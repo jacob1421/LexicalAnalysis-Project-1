@@ -8,7 +8,10 @@
 	Course: COSC-4310 & Spring 2020
 	Instructor: Mr.Brozovic
 	Compiler: Visual Studio 2019
-	Description: 
+	Description: The program will take a input file with extension of (.c) and an output file with extension of (.txt). The .c file will be processed one char at a time to find the
+	lexeme's. When the start of a lexeme is found it will be processed and returned to main via a struct. In addition, it will loop until it has either found a lexeme start or the end of file. Once the program
+	has recieved the EOF of the file it will print of the statistics(TokenName: Number of Tokens Processed with TokenName and the Total number of lines processed.) Lastly, as text is output to the console it is also written
+	to the output file specified when running the program.
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -193,7 +196,10 @@ Boolean isDigit(const CharToken aCharToken);
 
 int main(int argc, char *argv[]) {
 	FILE *cFilePtr, *txtFilePtr;
+	Lexeme* lexemeDataPtr;
 	unsigned int processedTokenCounter[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	unsigned int linesProcessed = 0;
+	int stopFlag = 0;
 
 	/* File Error Checking and Handling */
 	if (argc != 3) {
@@ -215,27 +221,39 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	Lexeme * lexemeDataPtr;
-	int stopFlag = 0;
-	unsigned int linesProcessed = 0;
 	while (!stopFlag) {
+		//Get next lexeme
 		lexemeDataPtr = lexScanner(cFilePtr);
+
+		//Print and save the lexeme struct data.
 		printAndWrite(txtFilePtr, lexemeDataPtr, processedTokenCounter);
 		
+		//Stop if we are at the EOF
 		if (lexemeDataPtr->lexToken == END_OF_FILE) {
 			stopFlag = 1;
 			linesProcessed = lexemeDataPtr->filePosition[0];
 		}
-	
+
+		//Free the malloc created in lexScanner.
 		free(lexemeDataPtr);
 	}
+	//Print and write the processed token data.
 	printProcessedTokenData(txtFilePtr, processedTokenCounter, &linesProcessed);
 
+	//Close the input and output file streams.
 	fclose(cFilePtr);
 	fclose(txtFilePtr);
 	return 0;
 }
-
+/*
+	Name: lexScanner
+	Returns: Lexeme *
+	Parameters:
+		In: FILE * cFilePtr
+		In/Out: CharToken * previousCharToken, CharToken *currentCharToken, unsigned int * filePosition
+		Out: Lexeme * lexemeDataPtr
+	Description: Takes a file pointer and packages the next lexeme into a struct with the lexeme string, token, file position and a completed flag.
+*/
 Lexeme * lexScanner(FILE* cFilePtr) {
 	/* Line Number, Column Number */
 	static unsigned int filePosition[2] = {1, 0};
@@ -247,6 +265,11 @@ Lexeme * lexScanner(FILE* cFilePtr) {
 
 	//Lexeme Data Struct
 	Lexeme * lexemeDataPtr = (Lexeme *)malloc(sizeof(Lexeme));
+	//Error checking malloc
+	if (lexemeDataPtr == NULL) {
+		perror("Error malloc failed");
+		exit(EXIT_FAILURE);
+	}
 	memset(lexemeDataPtr, 0, sizeof(Lexeme));
 	int numbCharsWritten = 0;
 
@@ -510,7 +533,15 @@ Lexeme * lexScanner(FILE* cFilePtr) {
 
 	return lexemeDataPtr;
 }
-
+/*
+	Name: getNextChar
+	Returns: NA
+	Parameters:
+		In: FILE * cFilePtr, CharToken* previousCharTokenPtr, CharToken * currentCharTokenPtr, unsigned int * filePositionPtr
+		In/Out: unsigned int * filePositionPtr, CharToken* previousCharTokenPtr, CharToken * currentCharTokenPtr
+		Out: NA
+	Description: Gets the next character from the file stream. Updates the current and previous token. Lastly, it will update the file position.
+*/
 void getNextChar(FILE * cFilePtr, CharToken* previousCharTokenPtr, CharToken * currentCharTokenPtr, unsigned int * filePositionPtr) {
 	//Set previousCharToken to the currentCharToken
 	*previousCharTokenPtr = *currentCharTokenPtr;
@@ -538,7 +569,15 @@ void getNextChar(FILE * cFilePtr, CharToken* previousCharTokenPtr, CharToken * c
 		filePositionPtr[1] += 1;
 	}
 }
-
+/*
+	Name: tokenIdentifierToString
+	Returns: char *
+	Parameters:
+		In: const LexTokenType tokenType
+		In/Out: NA
+		Out: Char *. The variable is a constant.
+	Description: Takes a LexTokenType and returns the string representation of the LexTokenType
+*/
 char * tokenIdentifierToString(const LexTokenType tokenType) {
 	switch (tokenType) {
 		case PPDIR:
@@ -573,7 +612,15 @@ char * tokenIdentifierToString(const LexTokenType tokenType) {
 		break;
 	}
 }
-
+/*
+	Name: isKeyword_or_Ident
+	Returns: LexTokenType
+	Parameters:
+		In: char * lookupString
+		In/Out: NA
+		Out: LexTokenType lexToken
+	Description: Function takes a string. It will then look the string up in a table of consts. If the string exists in the table then it will change the LexTokenType to a KEYWD.
+*/
 LexTokenType isKeyword_or_Ident(char* lookupString) {
 	LexTokenType lexToken = IDENT;
 	
@@ -620,7 +667,15 @@ LexTokenType isKeyword_or_Ident(char* lookupString) {
 	
 	return lexToken;
 }
-
+/*
+	Name: isFloat_or_Digit
+	Returns: LexTokenType
+	Parameters:
+		In: char * lookupString
+		In/Out: NA
+		Out: LexTokenType lexToken
+	Description: Function takes a string input. The function then checks if a . exists in the string. If a . exists then it is considered a float. LexTokenType is set to a FLOAT
+*/
 LexTokenType isFloat_or_Digit(char * lookupString) {
 	LexTokenType lexToken = INTGR;
 
@@ -631,21 +686,46 @@ LexTokenType isFloat_or_Digit(char * lookupString) {
 
 	return lexToken;
 }
-
+/*
+	Name: isAlphabetic
+	Returns: Boolean
+	Parameters:
+		In: const CharToken aCharToken
+		In/Out: NA
+		Out: Boolean
+	Description: Function takes in a single CharToken. If the token is between 65 and 90 or the token is between 97 and 122 then it is a letter. These numbers are based on the ASCII representation of a char.
+*/
 Boolean isAlphabetic(const CharToken aCharToken) {
 	if ((aCharToken >= 65 && aCharToken <= 90) || (aCharToken >= 97 && aCharToken <= 122)) {
 		return TRUE;
 	}
 	return FALSE;
 }
-
+/*
+	Name: isDigit
+	Returns: Boolean
+	Parameters:
+		In: const CharToken aCharToken
+		In/Out: NA
+		Out: Boolean
+	Description: Function takes in a single CharToken. If the token is between 48 and 57 then the CharToken is considered a digit. These numbers are based on the ASCII representation of a char.
+*/
 Boolean isDigit(const CharToken aCharToken) {
 	if ((aCharToken >= 48 && aCharToken <= 57)) {
 		return TRUE;
 	}
 	return FALSE;
 }
-
+/*
+	Name: printAndWrite
+	Returns: NA
+	Parameters:
+		In: FILE* txtFilePtr, Lexeme* lexemeDataPtr, unsigned int * tokensProcessed
+		In/Out: NA
+		Out: unsigned int * tokensProcessed
+	Description: Function takes a output file pointer to write the lexeme data too (Line Number, Column Number, Token Name and the Lexeme.
+	The function will also increment the token processed if the lexemeDataPtr struct has a tokenCompleted flag set to TRUE.
+*/
 void printAndWrite(FILE* txtFilePtr, Lexeme* lexemeDataPtr, unsigned int * tokensProcessed) {
 	char* tokenStringName = tokenIdentifierToString(lexemeDataPtr->lexToken);
 
@@ -656,9 +736,11 @@ void printAndWrite(FILE* txtFilePtr, Lexeme* lexemeDataPtr, unsigned int * token
 		}
 	}
 
-	/* End of file doesnt follow the format??? (###, ###) [TAB] token [TAB] lexeme */
+	/* End of file doesnt follow the format? */
 	if (lexemeDataPtr->lexToken == END_OF_FILE) {
-		printf("(%3i, %3i)\t%-4s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName);
+		printf("(%3i, %3i)\t%s\t\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName);
+		//Write to file
+		fprintf(txtFilePtr, "(%3i, %3i)\t%s\t\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName);
 	}else {
 		/* Space the token by the max token char length. */
 		printf("(%3i, %3i)\t%-5s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
@@ -666,7 +748,15 @@ void printAndWrite(FILE* txtFilePtr, Lexeme* lexemeDataPtr, unsigned int * token
 		fprintf(txtFilePtr, "(%3i, %3i)\t%-5s\t%s\n", lexemeDataPtr->filePosition[0], lexemeDataPtr->filePosition[1], tokenStringName, lexemeDataPtr->lexemeString);
 	}
 }
-
+/*
+	Name: printProcessedTokenData
+	Returns: NA
+	Parameters:
+		In: FILE* txtFilePtr, const unsigned int* tokensProcessed, const unsigned int* linesProcessed
+		In/Out: NA
+		Out: NA
+	Description: Function takes a output file pointer to write the number of tokens processed for each token. Also it will have the number of lines processed.
+*/
 void printProcessedTokenData(FILE* txtFilePtr, const unsigned int* tokensProcessed, const unsigned int* linesProcessed) {
 	printf("\n\nProcessed %4i lines\n", *linesProcessed);
 	printf("%10s%4i PPDIRs\n", "", tokensProcessed[0]);
