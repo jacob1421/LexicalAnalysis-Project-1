@@ -1,19 +1,3 @@
-/*
-	File: Program01.c
-	Project: Lexical Analysis
-	Assignment: Programming Project #1
-	Programmer: Jacob Bremiller
-	Date: 02/22/2019
-	University: McMurry University
-	Course: COSC-4310 & Spring 2020
-	Instructor: Mr.Brozovic
-	Compiler: Visual Studio 2019
-	Description: The program will take a input file with extension of (.c) and an output file with extension of (.txt). The .c file will be processed one char at a time to find the
-	lexeme's. When the start of a lexeme is found it will be processed and returned to main via a struct. In addition, it will loop until it has either found a lexeme start or the end of file. Once the program
-	has recieved the EOF of the file it will print of the statistics(TokenName: Number of Tokens Processed with TokenName and the Total number of lines processed.) Lastly, as text is output to the console it is also written
-	to the output file specified when running the program.
-*/
-
 #define _CRT_SECURE_NO_WARNINGS
 #define MAX_LEXEME_SIZE 129 // 128 + 1 for the null terminator
 #include <stdio.h>

@@ -124,6 +124,7 @@
 ( 56,   5)	KEYWD	return
 ( 56,  12)	INTGR	0
 ( 57,   5)	CMMNT	/* End of "Sample" source code for program #1 */
+( 59,   0)	EOF	
 
 
 Processed   59 lines
